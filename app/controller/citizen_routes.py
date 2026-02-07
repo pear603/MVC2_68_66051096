@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, flash, render_template, request, redirect, url_for
 from datetime import datetime
+from app.model.assignment_model import AssignmentModel
 from app.model.citizen_model import CitizenModel
 from collections import defaultdict
 from app.controller.allocation_routes import perform_allocation
@@ -34,7 +35,8 @@ def register():
     }
 
     if CitizenModel.add_citizen(data):
-        perform_allocation()
+        result_msg = AssignmentModel.assign_single(data)
+        # flash(f"ลงทะเบียนสำเร็จ: {result_msg}")
         return redirect(url_for('citizen.index'))
     else:
         return "Error: Could not register citizen.", 500

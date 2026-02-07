@@ -23,13 +23,17 @@ class ShelterModel:
             shelter_table.update({'current_occupancy': 0}, Query().id == s['id'])
 
     @staticmethod
-    def find_suitable_shelter(health_status, in_memory_shelters):
+    def find_suitable_shelter(citizen, shelters):
+        # 1. กรองเฉพาะศูนย์ที่ยังมีที่ว่าง (เต็มแล้วห้ามรับเพิ่มเด็ดขาด)
+        available = [s for s in shelters if s['current_occupancy'] < s['capacity']]
         
-        available = [s for s in in_memory_shelters if s.get('current_occupancy', 0) < s['capacity']]
-        
-        if health_status == 'At Risk':
-            available = [s for s in available if s.get('risk_level') == 'Low']
-            
-        return available[0] if available else None
-
-    
+        # 2. กฎด้านสุขภาพ: กลุ่มเสี่ยงต้องอยู่ศูนย์ความเสี่ยงต่ำเท่านั้น
+        if citizen['health_status'] == 'At Risk':
+            suitable = [s for s in available if s['risk_level'] == 'Low']
+        else:
+            # กลุ่มปกติ: ให้พยายามใช้ศูนย์ Medium/High ก่อนเพื่อกักศูนย์ Low ไว้ให้กลุ่มเสี่ยง
+            suitable = [s for s in available if s['risk_level'] != 'Low']
+            if not suitable: # ถ้าศูนย์อื่นเต็มหมดแล้วจริงๆ ถึงจะยอมให้เข้าศูนย์ Low
+                suitable = [s for s in available if s['risk_level'] == 'Low']
+                
+        return suitable[0] if suitable else None # ถ้าไม่เจอศูนย์ที่ว่าง/เหมาะสม จะคืนค่า None

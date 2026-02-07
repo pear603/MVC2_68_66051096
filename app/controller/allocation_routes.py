@@ -6,33 +6,34 @@ from tinydb import TinyDB, Query
 
 bp = Blueprint('allocation', __name__)
 db = TinyDB('db.json', encoding='utf-8')
-assignment_table = db.table('assignments')
+
 
 def perform_allocation():
     AssignmentModel.clear_all()
-    ShelterModel.reset_all_occupancy()
-    
+    ShelterModel.reset_all_occupancy() # ล้างค่า occupancy เป็น 0 ทุกครั้งที่คำนวณใหม่
 
+    # ดึงรายชื่อเรียงตามกฎ: เด็ก/คนชรา > VIP > กลุ่มเสี่ยง > ทั่วไป
     citizens = CitizenModel.get_prioritized_citizens()
     shelters = ShelterModel.get_all()
     
     for citizen in citizens:
-        
-        target = ShelterModel.find_suitable_shelter(citizen['health_status'], shelters)
+        target = ShelterModel.find_suitable_shelter(citizen, shelters)
         
         if target:
+            # กรณีมีที่ว่างและเงื่อนไขตรง: บันทึกได้ที่พัก
             AssignmentModel.create(citizen['id'], target['id'], 'ได้ที่พัก')
-            
             target['current_occupancy'] += 1
             ShelterModel.update_occupancy(target['id'], target['current_occupancy'])
         else:
+            # กรณีศูนย์เต็มหรือเงื่อนไขไม่ตรง: บันทึก "ตกค้าง" ทันที
             AssignmentModel.create(citizen['id'], None, 'ตกค้าง')
+
 # --- Routes ---
 
 @bp.route('/shelter')
 def show_shelters():
 
-    perform_allocation()
+    # perform_allocation()
 
     updated_shelters = ShelterModel.get_all()
     return render_template('allocation.html', shelters=updated_shelters)
@@ -44,6 +45,7 @@ def run_manual_allocation():
 
 @bp.route('/report')
 def show_report():
+    # perform_allocation()
     results = AssignmentModel.get_all()
     
     all_citizens = {c['id']: c for c in CitizenModel.get_all()}

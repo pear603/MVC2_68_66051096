@@ -1,11 +1,13 @@
 from tinydb import TinyDB
 from tinydb.storages import JSONStorage
 import random
-random.seed(42)
+from app.controller.allocation_routes import perform_allocation
 from datetime import datetime
 
 
 db = TinyDB('db.json', storage=JSONStorage, encoding='utf-8', ensure_ascii=False)
+random.seed(42)
+
 
 def seed_data():
     
@@ -42,6 +44,7 @@ def seed_data():
         citizens_list.append(citizen)
     
     citizens_table.insert_multiple(citizens_list)
+    perform_allocation()
     print(f"Added {len(citizens_list)} citizens.")
 
     print("Success: db.json has been populated with English data.")
