@@ -35,7 +35,7 @@ def register():
     }
 
     if CitizenModel.add_citizen(data):
-        result_msg = AssignmentModel.assign_single(data)
+        AssignmentModel.assign_single(data)
         # flash(f"ลงทะเบียนสำเร็จ: {result_msg}")
         return redirect(url_for('citizen.index'))
     else:
