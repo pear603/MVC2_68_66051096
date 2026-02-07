@@ -11,7 +11,6 @@ class CitizenModel:
 
     @staticmethod
     def add_citizen(data):
-        # ตรวจสอบการลงทะเบียนซ้ำ [cite: 167]
         if not citizen_table.search(Query().id == data['id']):
             citizen_table.insert(data)
             return True
@@ -23,10 +22,10 @@ class CitizenModel:
         if not all_citizens:
             return "C001"
         
-        # ดึงตัวเลขออกมาจาก ID ทั้งหมด (เช่น จาก 'C030' เอาแค่ 30)
+        
         ids = []
         for c in all_citizens:
-            # ใช้ regex ดึงเฉพาะตัวเลขออกมา
+            
             match = re.search(r'\d+', c['id'])
             if match:
                 ids.append(int(match.group()))
@@ -34,6 +33,19 @@ class CitizenModel:
         if not ids:
             return "C001"
             
-        # หาค่าสูงสุดแล้ว +1
         next_number = max(ids) + 1
-        return f"C{next_number:03d}" # จัดรูปแบบเป็น C001, C002
+        return f"C{next_number:03d}"
+    
+    @staticmethod
+    def get_prioritized_citizens():
+        citizens = citizen_table.all()
+        
+        def priority_score(c):
+            # กฎ: เด็ก (<=12) และผู้สูงอายุ (>=60) มาก่อน
+            if c['age'] <= 12 or c['age'] >= 60: return 0
+            if c['type'] == 'VIP': return 1
+            if c['type'] == 'RiskGroup': return 2
+            return 3
+
+        return sorted(citizens, key=priority_score)
+    

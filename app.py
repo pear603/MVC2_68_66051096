@@ -16,10 +16,6 @@ def index():
     return render_template('registration.html', citizens=citizens)
 # app.register_blueprint(citizen_bp)
 
-@app.route('/shelter')
-def show_shelters():
-    shelters = ShelterModel.get_all()
-    return render_template('allocation.html', shelters=shelters)
 
 if __name__ == '__main__':
     app.run(debug=True)

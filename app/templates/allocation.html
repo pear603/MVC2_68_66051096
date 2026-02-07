@@ -34,7 +34,7 @@
         <td>{{ s.capacity }}</td>
         <td>{{ s.current_occupancy }}</td> 
         <td>
-            
+            {% set current = s.current_occupancy | default(0) %}
             {% if s.current_occupancy >= s.capacity %}
                 <span style="color: red; font-weight: bold;">เต็มแล้ว (รับเพิ่มไม่ได้)</span> 
             {% else %}
@@ -49,6 +49,9 @@
     <br><hr><br>
     
     <div style="margin-top: 20px;">
+        <a href="/run-allocation" class="btn" onclick="return confirm('ยืนยันการรันระบบจัดสรรใหม่?')">
+            เริ่มกระบวนการจัดสรรประชาชน
+        </a>
         <a href="/" style="margin-left: 15px;">กลับหน้าลงทะเบียน</a>
     </div>
 
