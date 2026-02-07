@@ -1,10 +1,10 @@
-# สร้าง venv
+สร้าง venv
 python -m venv venv
 
-# เปิดใช้งาน (Windows)
+เปิดใช้งาน (Windows)
 venv\Scripts\activate
 
-# เปิดใช้งาน (Mac/Linux)
+เปิดใช้งาน (Mac/Linux)
 source venv/bin/activate
 
 ติดตั้ง Library ที่จำเป็น
