@@ -1,3 +1,4 @@
+ใช้ flask api และจัดเก็บข้อมูลด้วย json file
 สร้าง venv
 python -m venv venv
 
