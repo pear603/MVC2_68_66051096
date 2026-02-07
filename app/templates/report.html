@@ -40,7 +40,7 @@
         สถานะปัจจุบัน: ดำเนินการจัดสรรเสร็จสิ้นตาม Business Rules แล้ว
     </div>
 
-    <table>
+    <!-- <table>
         <thead>
             <tr>
                 <th>รหัสประชาชน</th>
@@ -73,7 +73,56 @@
             </tr>
             {% endfor %}
         </tbody>
-    </table>
+    </table> -->
+
+    <table>
+    <thead>
+        <tr>
+            <th>รหัสประชาชน</th>
+            <th>อายุ</th>
+            <th>ประเภท</th>
+            <th>สุขภาพ</th>
+            <th>สถานะการจัดสรร</th>
+            <th>รหัสศูนย์ที่ได้รับ</th>
+            <th>หมายเหตุ</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in results %}
+        <tr>
+            <td>{{ item.citizen_id }}</td>
+            <td>{{ item.age }}</td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.health_status }}</td>
+            <td>
+                {% if item.status == 'ได้ที่พัก' %}
+                    <span class="status-success">✓ ได้รับที่พัก</span>
+                {% else %}
+                    <span class="status-fail">✗ ตกค้าง</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if item.shelter_id %}
+                    <strong>{{ item.shelter_id }}</strong>
+                {% else %}
+                    <em style="color: #999;">- ไม่มี -</em>
+                {% endif %}
+            </td>
+            <td>
+                {% if item.status == 'ตกค้าง' %}
+                    {% if item.health_status == 'At Risk' %}
+                        ศูนย์ความเสี่ยงต่ำเต็ม
+                    {% else %}
+                        ศูนย์พักพิงเต็มทั้งหมด
+                    {% endif %}
+                {% else %}
+                    จัดสรรสำเร็จ
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
     <div style="margin-top: 30px;">
         <a href="/" style="margin-left: 15px;">กลับหน้าลงทะเบียน</a>

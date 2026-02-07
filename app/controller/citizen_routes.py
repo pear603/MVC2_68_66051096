@@ -4,7 +4,6 @@ from app.model.citizen_model import CitizenModel
 from collections import defaultdict
 from app.controller.allocation_routes import perform_allocation
 
-# สร้าง Blueprint เพื่อแยก Route ออกจาก app.py
 citizen_bp = Blueprint('citizen', __name__)
 
 @citizen_bp.route('/')

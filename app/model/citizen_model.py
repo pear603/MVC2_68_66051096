@@ -1,7 +1,7 @@
 import re
 from tinydb import TinyDB, Query
 
-db = TinyDB('db.json')
+db = TinyDB('db.json', encoding='utf-8')
 citizen_table = db.table('citizens')
 
 class CitizenModel:

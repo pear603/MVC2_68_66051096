@@ -27,9 +27,8 @@ class ShelterModel:
         
         available = [s for s in in_memory_shelters if s.get('current_occupancy', 0) < s['capacity']]
         
-
         if health_status == 'At Risk':
-            available = [s for s in available if s.get('risk_level') == 'ต่ำ']
+            available = [s for s in available if s.get('risk_level') == 'Low']
             
         return available[0] if available else None
 

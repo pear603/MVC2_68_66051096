@@ -46,7 +46,21 @@ def run_manual_allocation():
 
 @bp.route('/report')
 def show_report():
-    results = assignment_table.all()
+    # 1. ดึงข้อมูลการจัดสรรทั้งหมด
+    results = AssignmentModel.get_all()
+    
+    # 2. ดึงข้อมูลประชาชนทั้งหมดมาทำเป็น Dictionary เพื่อให้ค้นหาได้ง่าย (Lookup Table)
+    all_citizens = {c['id']: c for c in CitizenModel.get_all()}
+    
+    # 3. นำข้อมูลประชาชนไปใส่ในแต่ละผลการจัดสรร
+    for item in results:
+        citizen_info = all_citizens.get(item['citizen_id'])
+        if citizen_info:
+            item['age'] = citizen_info['age']
+            item['type'] = citizen_info['type']
+            item['health_status'] = citizen_info['health_status']
+
+    # 4. เรียงลำดับตาม ID ก่อนส่งไป View
     results.sort(key=lambda x: x['citizen_id'])
     
     return render_template('report.html', results=results)
