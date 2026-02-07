@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>หน้ารายงานผลการจัดสรร - Emergency Shelter System</title>
+    <style>
+        body { font-family: 'Sarabun', sans-serif; margin: 30px; line-height: 1.6; }
+        h1 { color: #2c3e50; }
+        .summary-box { 
+            background-color: #f8f9fa; 
+            padding: 15px; 
+            border-left: 5px solid #007bff; 
+            margin-bottom: 20px; 
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #dee2e6; padding: 12px; text-align: left; }
+        th { background-color: #e9ecef; }
+        
+        /* สีสำหรับสถานะ */
+        .status-success { color: #28a745; font-weight: bold; } /* ได้ที่พัก */
+        .status-fail { color: #dc3545; font-weight: bold; }    /* ตกค้าง */
+        
+        .btn { 
+            display: inline-block;
+            padding: 10px 20px; 
+            background-color: #6c757d; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .btn:hover { background-color: #5a6268; }
+    </style>
+</head>
+<body>
+
+    <h1>หน้ารายงานผล (Results Report)</h1> <div class="summary-box">
+        <strong>สรุปสถานการณ์:</strong><br>
+        จำนวนประชาชนทั้งหมด: {{ results|length }} คน<br>
+        สถานะปัจจุบัน: ดำเนินการจัดสรรเสร็จสิ้นตาม Business Rules แล้ว
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>รหัสประชาชน</th>
+                <th>สถานะการจัดสรร</th> <th>รหัสศูนย์พักพิงที่ได้รับ</th> <th>หมายเหตุ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in results %}
+            <tr>
+                <td>{{ item.citizen_id }}</td>
+                <td>
+                    {% if item.status == 'ได้ที่พัก' %}
+                        <span class="status-success">✓ ได้รับที่พัก</span>
+                    {% else %}
+                        <span class="status-fail">✗ ตกค้าง</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if item.shelter_id %}
+                        <strong>{{ item.shelter_id }}</strong>
+                    {% else %}
+                        <em style="color: #999;">- ไม่มี -</em>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if item.status == 'ตกค้าง' %}
+                        เนื่องจากศูนย์พักพิงเต็ม หรือเงื่อนไขสุขภาพไม่ตรงกับศูนย์ที่ว่าง {% else %}
+                        จัดสรรตามลำดับความสำคัญสำเร็จ {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 30px;">
+        <a href="/" style="margin-left: 15px;">กลับหน้าลงทะเบียน</a>
+    </div>
+
+</body>
+</html>

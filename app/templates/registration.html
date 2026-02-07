@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Citizen Registration</title>
+    <style>
+        body { font-family: sans-serif; margin: 30px; }
+        .sort-buttons { margin-bottom: 20px; }
+        .type-section { margin-bottom: 40px; border: 1px solid #ddd; padding: 15px; border-radius: 8px; }
+        .type-VIP { border-left: 10px solid #ffd700; } /* Gold for VIP */
+        .type-RiskGroup { border-left: 10px solid #ff4500; } /* Red-Orange for Risk */
+        .type-General { border-left: 10px solid #87ceeb; } /* Sky Blue for General */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
+        th { background-color: #f9f9f9; }
+        .btn { padding: 8px 15px; background: #eee; text-decoration: none; color: #333; border-radius: 4px; }
+        .btn-active { background: #007bff; color: white; }
+
+        .registration-form { 
+        background: #f4f7f6; 
+        padding: 20px; 
+        border-radius: 8px; 
+        margin-bottom: 30px; 
+        border: 1px solid #ccc;
+    }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+    .form-group input, .form-group select { 
+        padding: 8px; 
+        width: 100%; 
+        max-width: 300px; 
+        border-radius: 4px; 
+        border: 1px solid #ccc; 
+    }
+    .btn-submit { 
+        padding: 10px 20px; 
+        background-color: #007bff; 
+        color: white; 
+        border: none; 
+        border-radius: 4px; 
+        cursor: pointer; 
+    }
+    .btn-submit:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <h1>Citizen Registration List</h1>
+<div class="registration-form">
+    <h2>Register New Citizen</h2>
+    <form action="{{ url_for('citizen.register') }}" method="POST">
+        <!-- <div class="form-group">
+            <label for="id">Citizen ID (e.g., C031):</label>
+            <input type="text" id="id" name="id" placeholder="CXXX" required>
+        </div> -->
+        
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" min="1" max="120" required>
+        </div>
+
+        <div class="form-group">
+            <label for="health_status">Health Status:</label>
+            <select id="health_status" name="health_status">
+                <option value="Normal">Normal</option>
+                <option value="At Risk">At Risk</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="type">Citizen Type:</label>
+            <select id="type" name="type">
+                <option value="General">General</option>
+                <option value="RiskGroup">RiskGroup</option>
+                <option value="VIP">VIP</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-submit">Register Citizen</button>
+    </form>
+</div>
+    <div class="sort-buttons">
+        Sort By: 
+        <a href="/?sort=id" class="btn {{ 'btn-active' if current_sort == 'id' }}">ID</a>
+        <a href="/?sort=age" class="btn {{ 'btn-active' if current_sort == 'age' }}">Age (Priority Focus)</a>
+    </div>
+
+    {% for type, citizens in grouped.items() %}
+    <div class="type-section type-{{ type }}">
+        <h2>Type: {{ type }} ({{ citizens|length }} persons)</h2>
+        
+        {% if citizens %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Citizen ID</th>
+                    <th>Age</th>
+                    <th>Health Status</th>
+                    <th>Registration Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in citizens %}
+                <tr>
+                    <td>{{ c.id }}</td>
+                    <td>{{ c.age }}</td>
+                    <td>{{ c.health_status }}</td>
+                    <td>{{ c.registration_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No citizens in this category.</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    <div style="margin-top: 30px;">
+        <a href="/report" style="padding: 15px 30px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;">
+            report
+        </a>
+    </div>
+    <div style="margin-top: 30px;">
+        <a href="/shelter" style="padding: 15px 30px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;">
+            Shelter
+        </a>
+    </div>
+
+</body>
+</html>

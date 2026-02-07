@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>หน้าจัดสรรที่พัก - Emergency Shelter System</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .btn { padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        .risk-high { color: red; font-weight: bold; }
+        .risk-low { color: green; }
+    </style>
+</head>
+<body>
+
+    <h1>หน้าจัดสรรที่พัก (Shelter Allocation)</h1>
+    <p>แสดงรายละเอียดศูนย์พักพิงและความจุในปัจจุบัน</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>รหัสศูนย์พักพิง</th> <th>ระดับความเสี่ยง</th> <th>ความจุสูงสุด</th> <th>จำนวนคนที่พักปัจจุบัน</th> <th>สถานะ</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for s in shelters %}
+    <tr>
+        <td><strong>{{ s.id }}</strong></td>
+        <td class="{{ 'risk-high' if s.risk_level == 'สูง' else 'risk-low' }}">
+            {{ s.risk_level }}
+        </td>
+        <td>{{ s.capacity }}</td>
+        <td>{{ s.current_occupancy }}</td> 
+        <td>
+            
+            {% if s.current_occupancy >= s.capacity %}
+                <span style="color: red; font-weight: bold;">เต็มแล้ว (รับเพิ่มไม่ได้)</span> 
+            {% else %}
+                <span style="color: green;">ว่าง (เหลือ {{ s.capacity - s.current_occupancy }} ที่)</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+    </table>
+
+    <br><hr><br>
+    
+    <div style="margin-top: 20px;">
+        <a href="/" style="margin-left: 15px;">กลับหน้าลงทะเบียน</a>
+    </div>
+
+</body>
+</html>
