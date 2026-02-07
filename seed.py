@@ -1,6 +1,7 @@
 from tinydb import TinyDB
 from tinydb.storages import JSONStorage
 import random
+random.seed(42)
 from datetime import datetime
 
 

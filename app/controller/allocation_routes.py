@@ -17,14 +17,12 @@ def perform_allocation():
     shelters = ShelterModel.get_all()
     
     for citizen in citizens:
-        # 2. ให้ ShelterModel ตัดสินใจเลือกศูนย์ที่เหมาะสม
+        
         target = ShelterModel.find_suitable_shelter(citizen['health_status'], shelters)
         
         if target:
-            # 3. ให้ AssignmentModel บันทึกผล
             AssignmentModel.create(citizen['id'], target['id'], 'ได้ที่พัก')
             
-            # 4. อัปเดตสถานะความจุผ่าน ShelterModel
             target['current_occupancy'] += 1
             ShelterModel.update_occupancy(target['id'], target['current_occupancy'])
         else:
@@ -46,13 +44,10 @@ def run_manual_allocation():
 
 @bp.route('/report')
 def show_report():
-    # 1. ดึงข้อมูลการจัดสรรทั้งหมด
     results = AssignmentModel.get_all()
     
-    # 2. ดึงข้อมูลประชาชนทั้งหมดมาทำเป็น Dictionary เพื่อให้ค้นหาได้ง่าย (Lookup Table)
     all_citizens = {c['id']: c for c in CitizenModel.get_all()}
     
-    # 3. นำข้อมูลประชาชนไปใส่ในแต่ละผลการจัดสรร
     for item in results:
         citizen_info = all_citizens.get(item['citizen_id'])
         if citizen_info:
@@ -60,7 +55,6 @@ def show_report():
             item['type'] = citizen_info['type']
             item['health_status'] = citizen_info['health_status']
 
-    # 4. เรียงลำดับตาม ID ก่อนส่งไป View
     results.sort(key=lambda x: x['citizen_id'])
     
     return render_template('report.html', results=results)
