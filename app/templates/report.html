@@ -37,43 +37,7 @@
     <h1>หน้ารายงานผล (Results Report)</h1> <div class="summary-box">
         <strong>สรุปสถานการณ์:</strong><br>
         จำนวนประชาชนทั้งหมด: {{ results|length }} คน<br>
-        สถานะปัจจุบัน: ดำเนินการจัดสรรเสร็จสิ้นตาม Business Rules แล้ว
     </div>
-
-    <!-- <table>
-        <thead>
-            <tr>
-                <th>รหัสประชาชน</th>
-                <th>สถานะการจัดสรร</th> <th>รหัสศูนย์พักพิงที่ได้รับ</th> <th>หมายเหตุ</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in results %}
-            <tr>
-                <td>{{ item.citizen_id }}</td>
-                <td>
-                    {% if item.status == 'ได้ที่พัก' %}
-                        <span class="status-success">✓ ได้รับที่พัก</span>
-                    {% else %}
-                        <span class="status-fail">✗ ตกค้าง</span>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if item.shelter_id %}
-                        <strong>{{ item.shelter_id }}</strong>
-                    {% else %}
-                        <em style="color: #999;">- ไม่มี -</em>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if item.status == 'ตกค้าง' %}
-                        เนื่องจากศูนย์พักพิงเต็ม หรือเงื่อนไขสุขภาพไม่ตรงกับศูนย์ที่ว่าง {% else %}
-                        จัดสรรตามลำดับความสำคัญสำเร็จ {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table> -->
 
     <table>
     <thead>
